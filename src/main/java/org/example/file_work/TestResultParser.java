@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.NoArgsConstructor;
 
@@ -16,47 +16,89 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TestResultParser {
 
-  private int findAmount(String[] s) {
-    Iterator<String> iterator = Arrays.stream(s).iterator();
-    AtomicReference<String> amount = null;
+  private int findAmount(String[] s, String word, String word1) {
 
-    iterator.forEachRemaining(s1 -> {
-      if (s1.contains("test") || s1.contains("tests")) {
-        if (iterator.next().matches("[-+]?\\d+")) {
-          amount.set(iterator.next());
-        }
-      }
-    });
+    List<String> strings = Arrays.stream(s).toList();
+    AtomicReference<String> amount = new AtomicReference<>();
+
+    strings
+        .forEach(s1 -> {
+          if ((s1.toLowerCase().contains(word) || s1.toLowerCase().contains(word1))
+              && strings.size() > (strings.indexOf(s1) + 1) && strings.get(
+              strings.indexOf(s1) + 1).matches("[-+]?\\d+")) {
+
+            amount.set(strings.get(strings.indexOf(s1) + 1));
+          }
+        });
 
     return Integer.parseInt(amount.get());
   }
 
-  private void read(File file) {
+  private TestResult objectCreator(int amount, int passed, int failed) {
+    return new TestResult(amount, passed, failed);
+  }
+
+  private boolean checkResults(int amount, int passed, int failed) {
+    return amount == passed + failed;
+  }
+
+  private TestResult read(File file) {
     String str;
+    int amount = 0;
+    int passed = 0;
+    int failed = 0;
+
     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
       str = reader.readLine();
+
       while (str != null) {
         if (str.toLowerCase().contains("test") || str.toLowerCase().contains("tests")) {
           String[] s = str.split(" ");
-          findAmount(s);
+          amount = findAmount(s, "test", "tests");
         }
+        if (str.toLowerCase().contains("passed") || str.toLowerCase()
+            .contains("completed")) {
+          String[] s = str.split(" ");
+          passed = findAmount(s, "passed", "completed");
+        }
+        if (str.toLowerCase().contains("failed")) {
+          String[] s = str.split(" ");
+          failed = findAmount(s, "failed", "down");
+        }
+        str = reader.readLine();
       }
+
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    if (checkResults(amount, passed, failed)) {
+      return objectCreator(amount, passed, failed);
+    }
+    return new TestResult(0, 0, 0);
   }
 
-  public void parse(String path) {
+  public TestResult parse(String path) {
+    if (path == null) {
+      return new TestResult(0, 0, 0);
+    }
     File file = new File(path);
-    read(file);
+    return read(file);
   }
 
-  public void parse(File file) {
-    read(file);
+  public TestResult parse(File file) {
+    if (file == null) {
+      return new TestResult(0, 0, 0);
+    }
+    return read(file);
   }
 
-  public void parse(Path path) {
+  public TestResult parse(Path path) {
+    if (path == null) {
+      return new TestResult(0, 0, 0);
+    }
     File file = path.toFile();
-    read(file);
+    return read(file);
   }
 }

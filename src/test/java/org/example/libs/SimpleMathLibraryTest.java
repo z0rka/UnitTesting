@@ -1,11 +1,7 @@
-package org.example;
+package org.example.libs;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
@@ -24,39 +20,6 @@ class SimpleMathLibraryTest {
   private static final SimpleMathLibraryTest test = new SimpleMathLibraryTest();
 
   /**
-   * Method prints info about tests in console
-   */
-  @AfterAll
-  private static void printConsole() {
-    long test = countTests();
-    long disabled = countDisabled();
-
-    System.out.println(test + " tests found");
-    System.out.println(test - disabled + " tests started");
-    System.out.println(disabled + " tests skipped");
-  }
-
-  /**
-   * Method count test methods marker with {@link Disabled}
-   */
-  private static long countDisabled() {
-    Method[] declaredMethods = test.getClass().getDeclaredMethods();
-    return Arrays.stream(declaredMethods)
-        .filter(method -> method.isAnnotationPresent(Disabled.class))
-        .count();
-  }
-
-  /**
-   * Method count test methods marker with {@link Test}
-   */
-  private static long countTests() {
-    Method[] declaredMethods = test.getClass().getDeclaredMethods();
-    return Arrays.stream(declaredMethods)
-        .filter(method -> method.isAnnotationPresent(Test.class))
-        .count();
-  }
-
-  /**
    * Method inits private fields
    */
   @BeforeAll
@@ -65,7 +28,7 @@ class SimpleMathLibraryTest {
   }
 
   /**
-   * Method test add method from our class
+   * Method test {@link SimpleMathLibrary#add(Number, Number)} method from our class
    */
   @Test
   void testAdd() {
@@ -89,7 +52,7 @@ class SimpleMathLibraryTest {
   }
 
   /**
-   * Method test minus method from our class
+   * Method test {@link SimpleMathLibrary#minus(Number, Number)} method from our class
    */
   @Test
   void testMinus() {
