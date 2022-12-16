@@ -1,21 +1,32 @@
-package org.example;
+package org.example.objects;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.example.objects.Product;
 
 /**
  * @author Kostiantyn Kvartyrmeister on 14.12.2022
  */
-@NoArgsConstructor
+
 @Getter
+@Setter
 @EqualsAndHashCode
 
 public class ProductList {
 
-  private final List<Product> products = new ArrayList<>();
+  private List<Product> products;
+
+  public ProductList(List<Product> products) {
+    this.products = products;
+  }
+
+  public ProductList() {
+    products = new ArrayList<>();
+  }
 
   public boolean add(Product product) {
     products.add(product);
@@ -36,4 +47,5 @@ public class ProductList {
     products.remove(product);
     return true;
   }
+
 }

@@ -1,13 +1,13 @@
-package org.example;
+package org.example.handlers;
 
-import com.google.common.collect.Lists;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.NoArgsConstructor;
+import org.example.objects.Product;
+import org.example.objects.ProductList;
 import org.example.exceptions.WrongFileException;
 
 /**
@@ -33,11 +33,8 @@ public class OrderFileParser {
 
       while (str != null) {
         String[] split = str.split(";");
-        Product product = Product.builder()
-            .shopName(split[0])
-            .productName(split[1])
-            .price(Float.parseFloat(split[2]))
-            .amount(Integer.parseInt(split[3])).build();
+        Product product = new Product(split[0], split[1], Float.parseFloat(split[2]),
+            Integer.parseInt(split[3]));
 
         productList.add(product);
         str = reader.readLine();
