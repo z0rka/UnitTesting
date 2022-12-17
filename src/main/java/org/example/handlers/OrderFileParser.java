@@ -8,7 +8,6 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 import org.example.objects.Product;
 import org.example.objects.ProductList;
-import org.example.exceptions.WrongFileException;
 
 /**
  * @author Kostiantyn Kvartyrmeister on 14.12.2022 Class to parse files .csv that contains list of
@@ -28,7 +27,7 @@ public class OrderFileParser {
     ProductList productList = new ProductList();
 
     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-      reader.readLine();
+      str = reader.readLine();
       str = reader.readLine();
 
       while (str != null) {
@@ -55,12 +54,13 @@ public class OrderFileParser {
    * @return List<Product> from all files in the list
    */
 
-  public ProductList parseNamesFileList(List<String> filesNames) throws WrongFileException {
+  public ProductList parseNamesFileList(List<String> filesNames) {
     if (filesNames == null) {
       return new ProductList();
 
-    } else if (!filesNames.stream().allMatch(a -> a.contains(".csv"))) {
-      throw new WrongFileException("Contains not correct file " + filesNames.toString());
+    }
+    if (!filesNames.stream().allMatch(a -> a.contains(".csv"))) {
+      return new ProductList();
     }
 
     ProductList list = new ProductList();
@@ -75,12 +75,12 @@ public class OrderFileParser {
    * @param files list of Files ,checks each of them and sends for read
    * @return List<Product> from all files in the list
    */
-  public ProductList parseFilesList(List<File> files) throws WrongFileException {
+  public ProductList parseFilesList(List<File> files) {
     if (files == null) {
       return new ProductList();
-
-    } else if (!files.stream().allMatch(a -> a.getName().contains(".csv"))) {
-      throw new WrongFileException("Contains not correct file " + files.toString());
+    }
+    if (!files.stream().allMatch(a -> a.getName().contains(".csv"))) {
+      return new ProductList();
     }
 
     ProductList list = new ProductList();

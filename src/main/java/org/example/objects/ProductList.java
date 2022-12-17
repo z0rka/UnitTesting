@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.objects.Product;
 
 /**
  * @author Kostiantyn Kvartyrmeister on 14.12.2022

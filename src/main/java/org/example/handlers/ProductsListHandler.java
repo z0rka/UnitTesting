@@ -23,7 +23,7 @@ public class ProductsListHandler {
    * @param productList list of products
    * @List<String> list of shops
    */
-  private List<String> findShops(ProductList productList) {
+  public List<String> findShops(ProductList productList) {
     List<String> shopsList = new ArrayList<>();
 
     productList.getProducts().forEach(a -> {
@@ -97,6 +97,10 @@ public class ProductsListHandler {
    * @return Map<String, ProductList> map of shops and their products
    */
   public Map<String, ProductList> divideByShops(ProductList productList) {
+    if (productList == null) {
+      return new HashMap<>();
+    }
+
     Map<String, ProductList> dividedList = new HashMap<>();
     List<String> shops = findShops(productList);
 
@@ -114,6 +118,10 @@ public class ProductsListHandler {
    * @return Map<String, ProductList> filtered and merged map
    */
   public Map<String, ProductList> manageList(ProductList productList) {
+    if (productList == null) {
+      return new HashMap<>();
+    }
+
     Map<String, ProductList> productMap = divideByShops(productList);
     return mergeAndCount(productMap);
   }
